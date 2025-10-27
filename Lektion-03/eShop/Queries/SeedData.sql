@@ -40,18 +40,30 @@ INSERT INTO SalesOrders(
     1
 );
 
+INSERT INTO AddressTypes(
+    Value
+)VALUES(
+    'Leverans'
+),
+(
+    'Faktura'
+);
+
 INSERT INTO Addresses(
     CustomerId,
+    AddressTypeId,
     AddressLine,
     PostalCode,
     City
 )VALUES(
+    1,
     1,
     'Gatan 1',
     '12345',
     'Småstad'
 ),
 (
+    2,
     2,
     'Storgatan 14',
     '23456',
