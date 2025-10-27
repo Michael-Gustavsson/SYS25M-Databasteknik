@@ -13,11 +13,18 @@ DROP TABLE IF EXISTS Addresses;
 
 CREATE TABLE Addresses(
     Id INTEGER PRIMARY KEY AUTOINCREMENT,
-    AddressTypeId INTEGER NOT NULL,
     AddressLine VARCHAR(40) NOT NULL,
     PostalCode CHAR(5) NOT NULL,
-    City VARCHAR(50) NOT NULL,
-    CustomerId INTEGER NULL
+    City VARCHAR(50) NOT NULL
+);
+
+DROP TABLE IF EXISTS CustomersAddresses;
+
+CREATE TABLE CustomersAddresses(
+    CustomerId INTEGER,
+    AddressId INTEGER,
+    AddressTypeId INTEGER,
+    PRIMARY KEY(CustomerId,AddressId, AddressTypeId)
 );
 
 DROP TABLE IF EXISTS AddressTypes;
@@ -67,9 +74,16 @@ DROP TABLE IF EXISTS Invoices;
 
 CREATE TABLE Invoices(
     Id INTEGER PRIMARY KEY AUTOINCREMENT,
-    OrderId INTEGER NOT NULL,
-    InvoiceTypeId INTEGER NOT NULL,
     InvoiceNumber VARCHAR(20) NOT NULL UNIQUE,
     InvoiceDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     DueDate DATETIME NOT NULL
+);
+
+DROP TABLE IF EXISTS OrdersInvoices;
+
+CREATE TABLE OrdersInvoices(
+    OrderId INTEGER,
+    InvoiceId INTEGER,
+    InvoiceTypeId INTEGER,
+    PRIMARY KEY(OrderId,InvoiceId,InvoiceTypeId)
 );
