@@ -3,8 +3,9 @@ SELECT
     Email,
     Phone,
     OrderDate,
-    InvoiceDate,
     InvoiceNumber,
+    Value AS InvoiceType,
+    InvoiceDate,
     DueDate,
     ItemNumber,
     Name,
@@ -13,4 +14,5 @@ FROM Customers INNER JOIN SalesOrders
     ON Customers.Id = SalesOrders.CustomerId INNER JOIN OrderItems
     ON SalesOrders.Id = OrderItems.OrderId INNER JOIN Products
     ON OrderItems.ProductId = Products.Id INNER JOIN Invoices
-    ON SalesOrders.Id = Invoices.OrderId;
+    ON SalesOrders.Id = Invoices.OrderId INNER JOIN InvoiceTypes
+    ON Invoices.InvoiceTypeId = InvoiceTypes.Id;
