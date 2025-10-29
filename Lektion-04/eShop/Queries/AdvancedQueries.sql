@@ -70,10 +70,6 @@ WHERE Description IS NOT NULL;
 -- Uppgift är att skapa en faktura där vi summerar varje orderrad...
 -- Presentera faktura/orderrader på en faktura...
 SELECT
-    InvoiceNumber,
-    InvoiceDate,
-    DueDate,
-    OrderDate,
     ItemNumber,
     Name,
     Quantity,
@@ -84,3 +80,20 @@ FROM Invoices INNER JOIN OrdersInvoices
     ON OrdersInvoices.OrderId = SalesOrders.Id INNER JOIN OrderItems
     ON SalesOrders.Id = OrderItems.OrderId INNER JOIN Products
     ON OrderItems.ProductId = Products.Id;
+
+-- Visa faktura huvudet samt totalt fakturavärde...
+SELECT
+    InvoiceNumber,
+    InvoiceDate,
+    DueDate,
+    OrderDate,
+    FirstName || ' ' || LastName AS Customername,
+    Email,
+    Phone,
+    SUM(Quantity * OrderItems.Price) AS InvoiceValue
+FROM Invoices INNER JOIN OrdersInvoices
+    ON Invoices.Id = OrdersInvoices.InvoiceId INNER JOIN SalesOrders
+    ON OrdersInvoices.OrderId = SalesOrders.Id INNER JOIN OrderItems
+    ON SalesOrders.Id = OrderItems.OrderId INNER JOIN Products
+    ON OrderItems.ProductId = Products.Id INNER JOIN Customers
+    ON Customers.Id = SalesOrders.CustomerId;
