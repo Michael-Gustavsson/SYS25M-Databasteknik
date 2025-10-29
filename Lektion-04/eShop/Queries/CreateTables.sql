@@ -24,7 +24,10 @@ CREATE TABLE CustomersAddresses(
     CustomerId INTEGER,
     AddressId INTEGER,
     AddressTypeId INTEGER,
-    PRIMARY KEY(CustomerId,AddressId, AddressTypeId)
+    PRIMARY KEY(CustomerId,AddressId, AddressTypeId),
+    FOREIGN KEY(CustomerId) REFERENCES Customers(Id),
+    FOREIGN KEY(AddressId) REFERENCES Addresses(Id),
+    FOREIGN KEY(AddressTypeId) REFERENCES AddressTypes(Id)
 );
 
 DROP TABLE IF EXISTS AddressTypes;
@@ -59,7 +62,9 @@ CREATE TABLE OrderItems(
     ProductId INTEGER,
     Quantity INTEGER NOT NULL,
     Price FLOAT NOT NULL,
-    PRIMARY KEY(OrderId,ProductId)
+    PRIMARY KEY(OrderId,ProductId),
+    FOREIGN KEY(ProductId) REFERENCES Products(Id),
+    FOREIGN KEY(OrderId) REFERENCES SalesOrders(Id)
 );
 
 
