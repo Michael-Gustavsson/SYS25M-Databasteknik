@@ -1,0 +1,89 @@
+-- CREATE TABLES...
+DROP TABLE IF EXISTS Customers;
+
+CREATE TABLE Customers(
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    FirstName VARCHAR(15) NOT NULL,
+    LastName VARCHAR(30) NOT NULL,
+    Email VARCHAR(128) NOT NULL UNIQUE,
+    Phone VARCHAR(15) NOT NULL
+);
+
+DROP TABLE IF EXISTS Addresses;
+
+CREATE TABLE Addresses(
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    AddressLine VARCHAR(40) NOT NULL,
+    PostalCode CHAR(5) NOT NULL,
+    City VARCHAR(50) NOT NULL
+);
+
+DROP TABLE IF EXISTS CustomersAddresses;
+
+CREATE TABLE CustomersAddresses(
+    CustomerId INTEGER,
+    AddressId INTEGER,
+    AddressTypeId INTEGER,
+    PRIMARY KEY(CustomerId,AddressId, AddressTypeId)
+);
+
+DROP TABLE IF EXISTS AddressTypes;
+
+CREATE TABLE AddressTypes(
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Value VARCHAR(15) NOT NULL UNIQUE
+);
+
+DROP TABLE IF EXISTS SalesOrders;
+
+CREATE TABLE SalesOrders(
+    Id INTEGER PRIMARY KEY,
+    OrderDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    CustomerId INTEGER
+);
+
+DROP TABLE IF EXISTS Products;
+
+CREATE TABLE Products(
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ItemNumber VARCHAR(10) NOT NULL UNIQUE,
+    Name VARCHAR(60) NOT NULL,
+    Description VARCHAR(256) NULL,
+    Price FLOAT NOT NULL
+);
+
+DROP TABLE IF EXISTS OrderItems;
+
+CREATE TABLE OrderItems(
+    OrderId INTEGER,
+    ProductId INTEGER,
+    Quantity INTEGER NOT NULL,
+    Price FLOAT NOT NULL,
+    PRIMARY KEY(OrderId,ProductId)
+);
+
+
+DROP TABLE IF EXISTS InvoiceTypes;
+
+CREATE TABLE InvoiceTypes(
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Value VARCHAR(15) NOT NULL UNIQUE
+);
+
+DROP TABLE IF EXISTS Invoices;
+
+CREATE TABLE Invoices(
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    InvoiceNumber VARCHAR(20) NOT NULL UNIQUE,
+    InvoiceDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    DueDate DATETIME NOT NULL
+);
+
+DROP TABLE IF EXISTS OrdersInvoices;
+
+CREATE TABLE OrdersInvoices(
+    OrderId INTEGER,
+    InvoiceId INTEGER,
+    InvoiceTypeId INTEGER,
+    PRIMARY KEY(OrderId,InvoiceId,InvoiceTypeId)
+);
