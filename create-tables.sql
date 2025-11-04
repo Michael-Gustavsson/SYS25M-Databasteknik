@@ -1,0 +1,103 @@
+USE eShop;
+
+DROP TABLE IF EXISTS CustomersAddresses;
+DROP TABLE IF EXISTS Customers;
+DROP TABLE IF EXISTS AddressTypes;
+DROP TABLE IF EXISTS Addresses;
+DROP TABLE IF EXISTS OrderItems;
+DROP TABLE IF EXISTS OrdersInvoices;
+DROP TABLE IF EXISTS ProductsCategories;
+DROP TABLE IF EXISTS SalesOrders;
+DROP TABLE IF EXISTS Categories;
+DROP TABLE IF EXISTS Products;
+DROP TABLE IF EXISTS InvoiceTypes;
+DROP TABLE IF EXISTS Invoices;
+
+CREATE TABLE Customers(
+    Id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(15) NOT NULL,
+    LastName VARCHAR(30) NOT NULL,
+    Email VARCHAR(128) NOT NULL UNIQUE,
+    Phone VARCHAR(15) NOT NULL
+);
+
+CREATE TABLE Addresses(
+    Id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    AddressLine VARCHAR(40) NOT NULL,
+    PostalCode CHAR(5) NOT NULL,
+    City VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE AddressTypes(
+    Id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    Value VARCHAR(15) NOT NULL UNIQUE
+);
+
+CREATE TABLE CustomersAddresses(
+    CustomerId INTEGER,
+    AddressId INTEGER,
+    AddressTypeId INTEGER,
+    PRIMARY KEY(CustomerId,AddressId, AddressTypeId),
+    FOREIGN KEY(CustomerId) REFERENCES Customers(Id),
+    FOREIGN KEY(AddressId) REFERENCES Addresses(Id),
+    FOREIGN KEY(AddressTypeId) REFERENCES AddressTypes(Id)
+);
+
+CREATE TABLE SalesOrders(
+    Id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    OrderDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    CustomerId INTEGER
+);
+
+CREATE TABLE Products(
+    Id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    ItemNumber VARCHAR(15) NOT NULL UNIQUE,
+    Name VARCHAR(60) NOT NULL,
+    Description VARCHAR(256) NULL,
+    Price FLOAT NOT NULL
+);
+
+CREATE TABLE Categories(
+    Id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    CategoryName VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE ProductsCategories(
+    ProductId INTEGER,
+    CategoryId INTEGER,
+    PRIMARY KEY(ProductId,CategoryId),
+    FOREIGN KEY(ProductId) REFERENCES Products(Id),
+    FOREIGN KEY(CategoryId) REFERENCES Categories(Id)
+);
+
+CREATE TABLE OrderItems(
+    OrderId INTEGER,
+    ProductId INTEGER,
+    Quantity INTEGER NOT NULL,
+    Price FLOAT NOT NULL,
+    PRIMARY KEY(OrderId,ProductId),
+    FOREIGN KEY(ProductId) REFERENCES Products(Id),
+    FOREIGN KEY(OrderId) REFERENCES SalesOrders(Id)
+);
+
+CREATE TABLE InvoiceTypes(
+    Id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    Value VARCHAR(15) NOT NULL UNIQUE
+);
+
+CREATE TABLE Invoices(
+    Id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    InvoiceNumber VARCHAR(20) NOT NULL UNIQUE,
+    InvoiceDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    DueDate DATETIME NOT NULL
+);
+
+CREATE TABLE OrdersInvoices(
+    OrderId INTEGER,
+    InvoiceId INTEGER,
+    InvoiceTypeId INTEGER,
+    PRIMARY KEY(OrderId,InvoiceId,InvoiceTypeId),
+    FOREIGN KEY(OrderId) REFERENCES SalesOrders(Id),
+    FOREIGN KEY(InvoiceId) REFERENCES Invoices(Id),
+    FOREIGN KEY(InvoiceTypeId) REFERENCES InvoiceTypes(Id)
+);
