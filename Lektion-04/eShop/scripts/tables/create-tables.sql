@@ -1,5 +1,15 @@
--- CREATE TABLES...
+DROP TABLE IF EXISTS CustomersAddresses;
 DROP TABLE IF EXISTS Customers;
+DROP TABLE IF EXISTS AddressTypes;
+DROP TABLE IF EXISTS Addresses;
+DROP TABLE IF EXISTS OrderItems;
+DROP TABLE IF EXISTS OrdersInvoices;
+DROP TABLE IF EXISTS SalesOrders;
+DROP TABLE IF EXISTS Categories;
+DROP TABLE IF EXISTS ProductsCategories;
+DROP TABLE IF EXISTS Products;
+DROP TABLE IF EXISTS InvoiceTypes;
+DROP TABLE IF EXISTS Invoices;
 
 CREATE TABLE Customers(
     Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -9,16 +19,12 @@ CREATE TABLE Customers(
     Phone VARCHAR(15) NOT NULL
 );
 
-DROP TABLE IF EXISTS Addresses;
-
 CREATE TABLE Addresses(
     Id INTEGER PRIMARY KEY AUTOINCREMENT,
     AddressLine VARCHAR(40) NOT NULL,
     PostalCode CHAR(5) NOT NULL,
     City VARCHAR(50) NOT NULL
 );
-
-DROP TABLE IF EXISTS CustomersAddresses;
 
 CREATE TABLE CustomersAddresses(
     CustomerId INTEGER,
@@ -30,22 +36,16 @@ CREATE TABLE CustomersAddresses(
     FOREIGN KEY(AddressTypeId) REFERENCES AddressTypes(Id)
 );
 
-DROP TABLE IF EXISTS AddressTypes;
-
 CREATE TABLE AddressTypes(
     Id INTEGER PRIMARY KEY AUTOINCREMENT,
     Value VARCHAR(15) NOT NULL UNIQUE
 );
-
-DROP TABLE IF EXISTS SalesOrders;
 
 CREATE TABLE SalesOrders(
     Id INTEGER PRIMARY KEY,
     OrderDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     CustomerId INTEGER
 );
-
-DROP TABLE IF EXISTS Products;
 
 CREATE TABLE Products(
     Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -55,7 +55,18 @@ CREATE TABLE Products(
     Price FLOAT NOT NULL
 );
 
-DROP TABLE IF EXISTS OrderItems;
+CREATE TABLE Categories(
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    CategoryName VARCHAR(15) NOT NULL UNIQUE
+);
+
+CREATE TABLE ProductsCategories(
+    ProductId INTEGER,
+    CategoryId INTEGER,
+    PRIMARY KEY(ProductId,CategoryId),
+    FOREIGN KEY(ProductId) REFERENCES Products(Id),
+    FOREIGN KEY(CategoryId) REFERENCES Categories(Id)
+);
 
 CREATE TABLE OrderItems(
     OrderId INTEGER,
@@ -67,15 +78,10 @@ CREATE TABLE OrderItems(
     FOREIGN KEY(OrderId) REFERENCES SalesOrders(Id)
 );
 
-
-DROP TABLE IF EXISTS InvoiceTypes;
-
 CREATE TABLE InvoiceTypes(
     Id INTEGER PRIMARY KEY AUTOINCREMENT,
     Value VARCHAR(15) NOT NULL UNIQUE
 );
-
-DROP TABLE IF EXISTS Invoices;
 
 CREATE TABLE Invoices(
     Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -84,11 +90,12 @@ CREATE TABLE Invoices(
     DueDate DATETIME NOT NULL
 );
 
-DROP TABLE IF EXISTS OrdersInvoices;
-
 CREATE TABLE OrdersInvoices(
     OrderId INTEGER,
     InvoiceId INTEGER,
     InvoiceTypeId INTEGER,
-    PRIMARY KEY(OrderId,InvoiceId,InvoiceTypeId)
+    PRIMARY KEY(OrderId,InvoiceId,InvoiceTypeId),
+    FOREIGN KEY(OrderId) REFERENCES SalesOrders(Id),
+    FOREIGN KEY(InvoiceId) REFERENCES Invoices(Id),
+    FOREIGN KEY(InvoiceTypeId) REFERENCES InvoiceTypes(Id)
 );
